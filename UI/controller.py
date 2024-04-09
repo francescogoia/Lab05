@@ -20,5 +20,5 @@ class Controller:
         self._view.update_page()
 
 
-    def _cerca_iscritti(self):
-        pass
+    def _cerca_iscritti(self, corso):
+        return self._model._cerca_iscritti(corso)

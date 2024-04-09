@@ -22,6 +22,8 @@ class View(ft.UserControl):
         self.btn_cerca_corsi = None
         self.btn_iscriviti = None
 
+        self.txt_output = None
+
     def load_interface(self):
         """Function that loads the graphical elements of the view"""
         # title
@@ -66,7 +68,9 @@ class View(ft.UserControl):
         self.btn_iscriviti = ft.ElevatedButton(text="Iscriviti")
         row3 = ft.Row([self.btn_cerca_studente, self.btn_cerca_corsi, self.btn_iscriviti], alignment=ft.MainAxisAlignment.CENTER)
 
-        self._page.add(row1, row2, row3)
+        self.txt_output = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
+
+        self._page.add(row1, row2, row3, self.txt_output)
         self._page.update()
     @property
     def controller(self):
@@ -94,5 +98,10 @@ class View(ft.UserControl):
         for i in self._controller._model._corsi:
             self.dd_corsi.options.append(ft.dropdown.Option(key=i.codins, text=i))
 
-    def cerca_iscritti(self, e):
-        self._controller._cerca_iscritti()
+    def _cerca_iscritti(self, e):
+        corso = self.dd_corsi.value
+        lista_studenti = self._controller._cerca_iscritti(corso)
+        for i in lista_studenti:
+            self.txt_output.controls.append(ft.Text(value=i))
+
+        self.update_page()

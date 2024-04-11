@@ -16,6 +16,9 @@ class Iscrizione_DAO:
         for row in self.rows:
             self._lista_iscrizioni.append(row)
 
+        self.cursore.close()
+        self.connessione.close()
+
 
 if __name__ == "__main__":
     isDao = Iscrizione_DAO()

@@ -4,9 +4,9 @@ from model import corso, studente
 
 class Model:
     def __init__(self):
-        self._corsi = list()
-        self._studenti = list()
-        self._iscrizioni = list()
+        self._corsi = {}
+        self._studenti = {}
+        self._iscrizioni = []
         self.initialize()
 
     def initialize(self):
@@ -20,37 +20,33 @@ class Model:
         csDao.get_methods()
         for cDao in csDao._lista_corsi:
             c = corso.Corso(cDao['codins'], cDao['crediti'], cDao['nome'], cDao['pd'])
-            self._corsi.append(c)
+            self._corsi[cDao['codins']] = c
 
     def add_studenti(self):
         stDao = studente_DAO.StudenteDao()
         stDao.get_methods()
         for sDao in stDao._lista_studenti:
             s = studente.Studente(sDao['matricola'], sDao['cognome'], sDao['nome'], sDao['CDS'])
-            self._studenti.append(s)
+            self._studenti[sDao['matricola']] = s
 
     def add_iscritti(self):
         isDao = iscrizione_DAO.Iscrizione_DAO()
         isDao.get_methods()
-        for corso in self._corsi:
-            iscritti_corso = dict()
-            studenti_corso = list()
-            for iDao in isDao._lista_iscrizioni:
-                if iDao['codins'] == corso.codins:
-                    for stu in self._studenti:
-                        if stu.matricola == iDao['matricola']:
-                            studenti_corso.append(stu)
-            corso._iscritti_corso(studenti_corso)
-            iscritti_corso[corso.codins] = studenti_corso
-            self._iscrizioni.append(iscritti_corso)
+        for i in isDao._lista_iscrizioni:
+            for c in self._corsi.values():
+                if i['codins'] == c.codins:
+                    for s in self._studenti.values():
+                        if i['matricola'] == s.matricola:
+                            c.add_studente(s)
+                            s.add_corso(c)
 
 
     def _cerca_iscritti(self, corso):
-        for c in self._corsi:
+        for c in self._corsi.values():
             if c.codins == corso:
-                return c._studenti_iscritti
+                return c._studenti_iscritti.values()
 
 if __name__ == "__main__":
     m = Model()
-    for i in m._iscrizioni:
-        print(i)
+    m.add_iscritti()
+

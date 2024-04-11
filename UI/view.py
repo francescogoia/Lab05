@@ -95,13 +95,13 @@ class View(ft.UserControl):
         self._page.update()
 
     def _fill_selettore_corso(self):
-        for i in self._controller._model._corsi:
-            self.dd_corsi.options.append(ft.dropdown.Option(key=i.codins, text=i))
+        for i in self._controller._model._corsi.items():
+            self.dd_corsi.options.append(ft.dropdown.Option(key=i[0], text=i[1]))
 
     def _cerca_iscritti(self, e):
         corso = self.dd_corsi.value
         lista_studenti = self._controller._cerca_iscritti(corso)
         for i in lista_studenti:
-            self.txt_output.controls.append(ft.Text(value=i))
+            self.txt_output.controls.append(ft.Text(value=i.__str__()))
 
         self.update_page()

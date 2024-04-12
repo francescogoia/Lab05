@@ -63,9 +63,9 @@ class View(ft.UserControl):
         row2 = ft.Row([self.txt_matricola, self.txt_nome, self.txt_cognome], alignment=ft.MainAxisAlignment.CENTER)
 
         ## row3
-        self.btn_cerca_studente = ft.ElevatedButton(text="Cerca studente")
-        self.btn_cerca_corsi = ft.ElevatedButton(text="Cerca corsi")
-        self.btn_iscriviti = ft.ElevatedButton(text="Iscriviti")
+        self.btn_cerca_studente = ft.ElevatedButton(text="Cerca studente", on_click= self._cerca_studente)
+        self.btn_cerca_corsi = ft.ElevatedButton(text="Cerca corsi", on_click=self._cerca_corsi)
+        self.btn_iscriviti = ft.ElevatedButton(text="Iscriviti", on_click=self._iscrivi_studente_a_corso)
         row3 = ft.Row([self.btn_cerca_studente, self.btn_cerca_corsi, self.btn_iscriviti], alignment=ft.MainAxisAlignment.CENTER)
 
         self.txt_output = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
@@ -99,9 +99,36 @@ class View(ft.UserControl):
             self.dd_corsi.options.append(ft.dropdown.Option(key=i[0], text=i[1]))
 
     def _cerca_iscritti(self, e):
-        corso = self.dd_corsi.value
-        lista_studenti = self._controller._cerca_iscritti(corso)
+        cod_corso = self.dd_corsi.value
+        lista_studenti = self._controller._cerca_iscritti(cod_corso)
         for i in lista_studenti:
-            self.txt_output.controls.append(ft.Text(value=i.__str__()))
+            self.txt_output.controls.append(ft.Text(value = i.__str__()))
+
+        self.update_page()
+
+    def _cerca_corsi(self, e):
+        matr_studente = self.txt_matricola.value
+        lista_corsi = self._controller._cerca_corsi(matr_studente)
+        for i in lista_corsi:
+            self.txt_output.controls.append(ft.Text(value = i.__str__()))
+
+        self.update_page()
+
+    def _cerca_studente(self, e):
+        matr_studente = self.txt_matricola.value
+        nome_studente = self._controller._cerca_studente(matr_studente)[0]
+        cognome_studente = self._controller._cerca_studente(matr_studente)[1]
+        self.txt_nome.value = nome_studente
+        self.txt_cognome.value = cognome_studente
+
+        self.update_page()
+
+    def _iscrivi_studente_a_corso(self, e):
+        matr_studente = self.txt_matricola.value
+        cod_corso = self.dd_corsi.value
+        stu = self._controller._return_studente(matr_studente)
+        crs = self._controller._return_corso(cod_corso)
+        self._controller._nuova_iscrizione(matr_studente, cod_corso)
+        self.txt_output.controls.append(ft.Text(value= f"Lo studente {stu} ora è iscritto al corso {crs}"))
 
         self.update_page()

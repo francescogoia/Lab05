@@ -19,6 +19,18 @@ class Iscrizione_DAO:
         self.cursore.close()
         self.connessione.close()
 
+    def add_row(self, matricola, codins):
+        self.connessione = get_connection()
+        self.cursore = self.connessione.cursor(dictionary=True)
+
+        query = """insert into iscrizione
+                            (matricola, codins)
+                            values (%s, %s)"""
+        self.cursore.execute(query, (matricola, codins))
+
+        self.connessione.commit()
+        self.cursore.close()
+        self.connessione.close()
 
 if __name__ == "__main__":
     isDao = Iscrizione_DAO()

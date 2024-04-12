@@ -20,5 +20,19 @@ class Controller:
         self._view.update_page()
 
 
-    def _cerca_iscritti(self, corso):
-        return self._model._cerca_iscritti(corso)
+    def _cerca_iscritti(self, cod_corso):
+        return self._model._cerca_iscritti(cod_corso)
+
+    def _cerca_corsi(self, matr_studente):
+        return self._model._cerca_corsi(matr_studente)
+
+    def _cerca_studente(self, matr_studente):
+        return self._model._cerca_studente(matr_studente)
+
+    def _return_corso(self, cod_corso):
+        return self._model._return_corso(cod_corso)
+    def _return_studente(self, matricola):
+        return self._model._return_studente(matricola)
+
+    def _nuova_iscrizione(self, matricola, cod_corso):
+        return self._model._nuova_iscrizione(matricola, cod_corso)

@@ -33,12 +33,12 @@ class Model:
         isDao = iscrizione_DAO.Iscrizione_DAO()
         isDao.get_methods()
         for i in isDao._lista_iscrizioni:
-            for c in self._corsi.values():
-                if i['codins'] == c.codins:
-                    for s in self._studenti.values():
-                        if i['matricola'] == s.matricola:
-                            c.add_studente(s)
-                            s.add_corso(c)
+            s = self._studenti[int(i['matricola'])]
+            c = self._corsi[i['codins']]
+            s.add_corso(c)
+            c.add_studente(s)
+
+
 
 
     def _cerca_iscritti(self, cod_corso):
